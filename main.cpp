@@ -357,13 +357,13 @@ extern "C" void* ThreadStats(void*) {
   } while(1);
 }
 
-static const string mainnet_seeds[] = {"dnsseed.ionomy.com", "45.32.211.127", "dnsseed.robertdewilde.nl", "95.85.26.115", ""};
-static const string testnet_seeds[] = {"dnsseedtest.robertdewilde.nl", ""};
+static const string mainnet_seeds[] = {"dnsseed.ionomy.com", "45.32.211.127", "dnsseed.ionomy.nl", ""};
+static const string testnet_seeds[] = {"dnsseedtest.robertdewilde.nl", "95.85.26.115"};
 static const string *seeds = mainnet_seeds;
 
 extern "C" void* ThreadSeeder(void*) {
   if (!fTestNet){
-    db.Add(CService("45.32.211.127", 15714, false), true);
+//    db.Add(CService("45.32.211.127", 15714, false), true);
 //    db.Add(CService("1111:2222:3:4444::5", 15714, false), true);
   }
   do {
