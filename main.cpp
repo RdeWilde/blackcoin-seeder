@@ -365,6 +365,10 @@ extern "C" void* ThreadSeeder(void*) {
   if (!fTestNet){
 //    db.Add(CService("45.32.211.127", 15714, false), true);
 //    db.Add(CService("1111:2222:3:4444::5", 15714, false), true);
+  } else {
+    db.Add(CService("67.187.186.84:37398", 15714, false), true);
+    db.Add(CService("139.162.220.51:38648", 15714, false), true);
+    db.Add(CService("198.50.205.96:58851", 15714, false), true);
   }
   do {
     for (int i=0; seeds[i] != ""; i++) {
