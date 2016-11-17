@@ -35,7 +35,7 @@ public:
   CDnsSeedOpts() : nThreads(96), nDnsThreads(4), nPort(53), mbox(NULL), ns(NULL), host(NULL), tor(NULL), fDaemon(false), fUseTestNet(false), fWipeBan(false), fWipeIgnore(false), ipv4_proxy(NULL), ipv6_proxy(NULL) {}
 
   void ParseCommandLine(int argc, char **argv) {
-    static const char *help = "BlackCoin-seeder\n"
+    static const char *help = "ion-seeder\n"
                               "Usage: %s -h <host> -n <ns> [-m <mbox>] [-t <threads>] [-p <port>]\n"
                               "\n"
                               "Options:\n"
@@ -357,14 +357,14 @@ extern "C" void* ThreadStats(void*) {
   } while(1);
 }
 
-static const string mainnet_seeds[] = {"seed.blackcoin.co", "bcseed.syllabear.us.to", ""};
-static const string testnet_seeds[] = {""};
+static const string mainnet_seeds[] = {"dnsseed.ionomy.com", "45.32.211.127", "dnsseed.robertdewilde.nl", ""};
+static const string testnet_seeds[] = {"dnsseedtest.robertdewilde.nl", ""};
 static const string *seeds = mainnet_seeds;
 
 extern "C" void* ThreadSeeder(void*) {
   if (!fTestNet){
-    db.Add(CService("198.52.200.75", 15714, false), true);
-    db.Add(CService("2001:41d0:2:7438::1", 15714, false), true);
+    db.Add(CService("45.32.211.127", 15714, false), true);
+//    db.Add(CService("1111:2222:3:4444::5", 15714, false), true);
   }
   do {
     for (int i=0; seeds[i] != ""; i++) {
@@ -407,10 +407,10 @@ int main(int argc, char **argv) {
   bool fDNS = true;
   if (opts.fUseTestNet) {
       printf("Using testnet.\n");
-      pchMessageStart[0] = 0xcd;
+      pchMessageStart[0] = 0x5f;
       pchMessageStart[1] = 0xf2;
-      pchMessageStart[2] = 0xc0;
-      pchMessageStart[3] = 0xef;
+      pchMessageStart[2] = 0x15;
+      pchMessageStart[3] = 0x30;
       seeds = testnet_seeds;
       fTestNet = true;
   }
