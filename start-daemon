@@ -1,0 +1,1 @@
+sudo ./dnsseed -h dnsseedtest.ionomy.nl -n dnsseedtest.ionomy.nl -p 5353 -m email@robertdewilde.nl --testnet --daemon
