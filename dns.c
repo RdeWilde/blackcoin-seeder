@@ -384,19 +384,23 @@ int dnsserver(dns_opt_t *opt) {
   struct sockaddr_in si_other;
   int senderSocket = -1;
   senderSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-  if (senderSocket == -1) 
+  if (senderSocket == -1)  {
+  printf("fail 1");
     return -3;
+   }
 
   int replySocket;
   if (listenSocket == -1) {
     struct sockaddr_in si_me;
     if ((listenSocket=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP))==-1) {
+    printf("fail 2");
       listenSocket = -1;
       return -1;
     }
     replySocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (replySocket == -1)
     {
+    printf("fail 3");
       close(listenSocket);
       return -1;
     }
@@ -406,8 +410,12 @@ int dnsserver(dns_opt_t *opt) {
     si_me.sin_family = AF_INET;
     si_me.sin_port = htons(opt->port);
     si_me.sin_addr.s_addr = INADDR_ANY;
-    if (bind(listenSocket, (struct sockaddr*)&si_me, sizeof(si_me))==-1)
+    if (bind(listenSocket, (struct sockaddr*)&si_me, sizeof(si_me))==-1) {
+    printf("fail 4");
       return -2;
+      }
+  } else {
+printf("fail else");
   }
   
   unsigned char inbuf[BUFLEN], outbuf[BUFLEN];
@@ -430,19 +438,26 @@ int dnsserver(dns_opt_t *opt) {
   {
     ssize_t insize = recvmsg(listenSocket, &msg, 0);
     unsigned char *addr = (unsigned char*)&si_other.sin_addr.s_addr;
-//    printf("DNS: Request %llu from %i.%i.%i.%i:%i of %i bytes\n", (unsigned long long)(opt->nRequests), addr[0], addr[1], addr[2], addr[3], ntohs(si_other.sin_port), (int)insize);
-    if (insize <= 0)
+    printf("DNS: Request %llu from %i.%i.%i.%i:%i of %i bytes\n", (unsigned long long)(opt->nRequests), addr[0], addr[1], addr[2], addr[3], ntohs(si_other.sin_port), (int)insize);
+    if (insize <= 0) {
+printf("empty 1");
       continue;
+}
 
     ssize_t ret = dnshandle(opt, inbuf, insize, outbuf);
-    if (ret <= 0)
+    if (ret <= 0) {
+
+printf("empty 2");
       continue;
+      }
 
     bool handled = false;
     for (struct cmsghdr*hdr = CMSG_FIRSTHDR(&msg); hdr; hdr = CMSG_NXTHDR(&msg, hdr))
     {
+    printf("for");
       if (hdr->cmsg_level == IPPROTO_IP && hdr->cmsg_type == DSTADDR_SOCKOPT)
       {
+      printf("for if");
         msg.msg_iov[0].iov_base = outbuf;
         msg.msg_iov[0].iov_len = ret;
         sendmsg(listenSocket, &msg, 0);
@@ -451,8 +466,10 @@ int dnsserver(dns_opt_t *opt) {
         handled = true;
       }
     }
-    if (!handled)
+    if (!handled) {
+    printf("handled");
       sendto(listenSocket, outbuf, ret, 0, (struct sockaddr*)&si_other, sizeof(si_other));
+      }
   }
   return 0;
 }
