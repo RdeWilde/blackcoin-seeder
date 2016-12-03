@@ -25,6 +25,7 @@ struct in_pktinfo
   {
     struct in_addr ipi_addr;	/* src/dst IPv6 address */
     unsigned int ipi_ifindex;	/* send/recv interface index */
+    struct in_addr ipi_spec_dst; /* Local address */
   };
 
 # define DSTADDR_SOCKOPT IP_PKTINFO
@@ -404,7 +405,7 @@ int dnsserver(dns_opt_t *opt) {
     memset((char *) &si_me, 0, sizeof(si_me));
     si_me.sin_family = AF_INET;
     si_me.sin_port = htons(opt->port);
-    si_me.sin_addr.s_addr  = htonl(INADDR_ANY);
+    si_me.sin_addr.s_addr = INADDR_ANY;
     if (bind(listenSocket, (struct sockaddr*)&si_me, sizeof(si_me))==-1)
       return -2;
   }
@@ -428,7 +429,7 @@ int dnsserver(dns_opt_t *opt) {
   for (; 1; ++(opt->nRequests))
   {
     ssize_t insize = recvmsg(listenSocket, &msg, 0);
-//    unsigned char *addr = (unsigned char*)&si_other.sin_addr.s_addr;
+    unsigned char *addr = (unsigned char*)&si_other.sin_addr.s_addr;
 //    printf("DNS: Request %llu from %i.%i.%i.%i:%i of %i bytes\n", (unsigned long long)(opt->nRequests), addr[0], addr[1], addr[2], addr[3], ntohs(si_other.sin_port), (int)insize);
     if (insize <= 0)
       continue;

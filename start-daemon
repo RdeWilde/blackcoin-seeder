@@ -1,1 +1,1 @@
-sudo ./dnsseed -h main.seed.ionomy.nl -n main.seed.ionomy.nl -p 53 -m support@ionomy.com --daemon --wipeban --wipeignore 
+sudo ./dnsseed -h main.seed.ionomy.nl -n main.seed.ionomy.nl -p 53 -m support@ionomy.com --wipeban --wipeignore 
